@@ -9,6 +9,10 @@ public  abstract class Character_defaut : MonoBehaviour {
 	protected bool main,alternated,multiple;
 	Rigidbody2D rigido;
 	protected GameObject mainbarrel, barrel1, barrel2, maingun, gun1, gun2,bullet;
+	float recoiltime = 0;
+	GameObject bones;
+	Player_Controller pc;
+	int wichgun = 1;
 
 	public bool Getmain(){return main;}
 
@@ -48,6 +52,7 @@ public  abstract class Character_defaut : MonoBehaviour {
 	// Use this for initialization
 	protected void Start () 
 	{
+
 		red = Resources.Load("Images/red",typeof(Texture)) as Texture;
 		rigido = GetComponent<Rigidbody2D> ();
 		mainbarrel = this.transform.FindChild ("bones_parent").transform.FindChild ("gun_barrel_main").gameObject;
@@ -97,7 +102,7 @@ public  abstract class Character_defaut : MonoBehaviour {
 		{
 			if(finalpoint.y < 0)
 			{
-				this.gameObject.GetComponent<Player_Controller>().SetPulos(2);
+				SetPulos(2);
 				
 				
 				
@@ -150,6 +155,167 @@ public  abstract class Character_defaut : MonoBehaviour {
 		finalpoint = new Vector2(fp.x,fp.y);
 		
 		return finalpoint;
+	}
+
+	protected void Update () 
+	{
+		pc = GetComponent<Player_Controller>();
+
+		if(recoiltime <= 0)
+		{
+			recoiltime = 0;
+		}
+		else
+		{
+			recoiltime = recoiltime - Time.deltaTime;
+		}
+		
+		if(pc.GetKeyDown(4))
+		{
+			if(pulos>0)
+			{
+				  GetRigido().AddForce(Vector2.up*250,ForceMode2D.Impulse);
+				pulos --;
+				
+			}
+			
+		}
+		GameObject parent_bone = this.transform.FindChild ("bones_parent").gameObject;
+		Vector3 rot = parent_bone.transform.rotation.eulerAngles;
+		if(pc.GetKey(2))
+		{
+			if(pc.GetKey(1) == false && pc.GetKey(3) == false)
+			{
+				rot.z = 90;
+			}
+			else
+			{
+				rot.z = 45;
+			}
+		}
+		
+		if(pc.GetKey(0))
+		{
+			if(pc.GetKey(1) == false && pc.GetKey(3) == false)
+			{
+				rot.z = -90;
+			}
+			else
+			{
+				rot.z = -45;
+			}
+		}
+		if(pc.GetKey(2) == false && pc.GetKey(0) == false)
+		{
+			rot.z = 0;
+		}
+		
+		parent_bone.transform.rotation = Quaternion.Euler(rot);
+		  GetGun(1).transform.rotation = Quaternion.Euler(rot);
+		  GetGun(2).transform.rotation = Quaternion.Euler(rot);
+		
+		
+		
+		if(pc.GetKey(1) == false && pc.GetKey(3) == false)
+		{
+			
+		}
+		else
+		{
+			Quaternion rotation = this.transform.rotation;
+			Vector2 oldspeed =   GetRigido().velocity;
+			oldspeed.x = 0;
+			if(pc.GetKey (1))
+			{
+				rotation.y = 0;
+				oldspeed.x = oldspeed.x - 10;
+				
+			}
+			if(pc.GetKey (3))
+			{
+				rotation.y = 180;
+				oldspeed.x = oldspeed.x + 10;
+			}
+			this.transform.rotation = rotation;
+			  GetRigido().velocity = oldspeed;
+		}
+		
+		
+		
+		
+		if(pc.GetKey(5))
+		{
+			if(recoiltime == 0)
+			{
+				Vector3 position = new Vector3();
+				if(  Getmain() == true)
+				{
+					if(  Getmult() == true)
+					{
+						position =   GetGun (0).transform.position;
+						GameObject Boolet;
+						for(int i = 0; i < 5;i++)
+						{
+							Boolet = Instantiate(  GetBullet(),position,randomRotation(  GetGun (0).transform.rotation,-10,10)) as GameObject;
+							Boolet.GetComponent<Bullet_code>().SetOwner(this.name);
+						}
+						
+					}
+					else
+					{
+						position =   GetGun (0).transform.position;
+						GameObject Boolet = Instantiate(  GetBullet(),position,  GetGun (0).transform.rotation) as GameObject;
+						Boolet.GetComponent<Bullet_code>().SetOwner(this.name);
+					}
+					
+				}
+				else
+				{
+					if(  Getalt() == false)
+					{
+						position =   GetGun (1).transform.position;
+						GameObject Boolet = Instantiate(  GetBullet(),position,  GetGun (1).transform.rotation) as GameObject;
+						Boolet.GetComponent<Bullet_code>().SetOwner(this.name);
+						position =   GetGun (2).transform.position;
+						Boolet = Instantiate(  GetBullet(),position,  GetGun (2).transform.rotation) as GameObject;
+						Boolet.GetComponent<Bullet_code>().SetOwner(this.name);
+					}
+					else
+					{
+						position =   GetGun (wichgun).transform.position;
+						GameObject Boolet = Instantiate(  GetBullet(),position,  GetGun (wichgun).transform.rotation) as GameObject;
+						Boolet.GetComponent<Bullet_code>().SetOwner(this.name);
+						wichgun ++;
+						if(wichgun >= 3){wichgun =1;}
+					}
+				}
+				
+				recoiltime =   getrate();
+				
+			}
+			
+			
+		}
+		
+		
+		
+		
+	}
+	
+	Quaternion  randomRotation (Quaternion original, float minimum, float maximum)
+	{
+		//Quaternion jae = original;
+		Vector3 jae = original.eulerAngles;
+		float nice = UnityEngine.Random.Range (minimum, maximum);
+		jae.z = jae.z + nice;
+		return Quaternion.Euler(jae);
+		
+		
+	}
+	
+	public void SetPulos(int i)
+	{
+		pulos = i;
 	}
 
 

@@ -18,6 +18,7 @@ public class Marcos : Character_defaut
 		dmg = 10;
 		hp = 100;
 		rate = 1 / 4f;
+
 		GetComponent<SpriteRenderer>().sprite = head;
 		Destroy(GetComponent<PolygonCollider2D>());
 		gameObject.AddComponent<PolygonCollider2D>();
