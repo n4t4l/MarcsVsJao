@@ -17,7 +17,7 @@ public class Ja1 : Character_defaut
 		main = true;
 		alternated = true;
 		multiple = true;
-		dmg = 7.5f;
+		dmg = 10f;
 		hp = 100;
 		rate = 1.5f;
 		GetComponent<SpriteRenderer>().sprite = head;
