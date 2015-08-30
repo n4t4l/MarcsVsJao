@@ -1,4 +1,4 @@
-﻿o,tipusing UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class KBC2 : Player_Controller {
@@ -20,10 +20,6 @@ public class KBC2 : Player_Controller {
 		keycodes[5] = KeyCode.Keypad3;
 	}
 
-	void Update () 
-	{
-		base.Update ();
-	}
 
 	override public bool GetKeyUp(int i)
 	{
