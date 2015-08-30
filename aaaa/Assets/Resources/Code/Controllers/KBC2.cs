@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿o,tipusing UnityEngine;
 using System.Collections;
 
 public class KBC2 : Player_Controller {
