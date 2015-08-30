@@ -9,6 +9,8 @@ public class Camera_Script : MonoBehaviour {
 	string lost = "";
 	int ControleAparece;
 	int ControleAparece2;
+
+	string Player1name,Player2name,Player1Control,Player2Control;
 	void Awake()
 	{
 		jao_perdeu = Resources.Load("jao_perdeu",typeof(Texture)) as Texture;
